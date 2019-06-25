@@ -15,8 +15,24 @@ even a Smartcard reader or USB signature token.
 The signing process will take place directly inside the browser, without the need to download the document, 
 sign it and upload it again to Alfresco. 
 
-Download latest release : 
+# MERGED THE FORK https://github.com/ideiudicibus/sinekarta
 
-alfresco plugin : https://github.com/Sinekarta/sinekarta/releases/download/v3.0/sinekarta-ds-alfresco.amp
+sinekarta mavenized
+=========
 
-share plugin : https://github.com/Sinekarta/sinekarta/releases/download/v3.0/sinekarta-ds-share.amp
+sinekarta mavenized.
+--------------------
+
+this project is an attempt to mavenized the sinekarta project: e-invoice and legal (italian law) document storage ([http://it.wikipedia.org/wiki/Conservazione_sostitutiva] )  solution.
+
+more infos at
+
+* sinekarta website [http://www.sinekarta.org/]
+
+* forum at sourceforge [https://sourceforge.net/projects/sinekarta/forums]
+
+* original sourceforge site [https://sourceforge.net/projects/sinekarta/]
+
+* mavenization process starts from the maven-alfresco-archetypes [http://code.google.com/p/maven-alfresco-archetypes]
+
+any volunteers?

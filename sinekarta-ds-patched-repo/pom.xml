@@ -1,0 +1,543 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>it.abd.alfresco.sign</groupId>
+  <artifactId>sinekarta-ds-patched-repo</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+  
+   <properties>
+   		<!-- RUN MAVEN CON clean source:jar package assembly:single -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyyMMdd.HHmmss</maven.build.timestamp.format>
+		<!-- Alfresco Maven Plugin version 3.0.1 -->
+		<alfresco.groupId>org.alfresco</alfresco.groupId>
+        <alfresco.sdk.version>3.0.1</alfresco.sdk.version>
+        <alfresco.platform.version>5.2.f</alfresco.platform.version>
+        <maven.alfresco.edition>community</maven.alfresco.edition>
+        <!-- 
+        <alfresco.share.version>5.2.e</alfresco.share.version>
+        <alfresco.data.location>${session.executionRootDirectory}/alf_data_dev</alfresco.data.location>
+        <solr.home>${alfresco.data.location}/solr</solr.home>
+        <solr.model.dir>${solr.home}/alfrescoModels</solr.model.dir>
+        <solr.content.dir>${solr.home}/index</solr.content.dir>      
+        -->    
+        
+        <jaxws.version>2.2.1</jaxws.version>
+		<jaxb-impl.version>2.2.7</jaxb-impl.version>
+		<org.bouncycastle.version>1.46</org.bouncycastle.version>	
+		<iaik-pkcs11-wrapper.version>1.2.17</iaik-pkcs11-wrapper.version>
+		<org.slf4j.version>1.7.25</org.slf4j.version>	
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${alfresco.groupId}</groupId>
+                <artifactId>alfresco-platform-distribution</artifactId>
+                <version>${alfresco.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- The main Alfresco Repo dependency for compiling Java code in src/main/java -->
+        <dependency>
+            <groupId>${alfresco.groupId}</groupId>
+            <artifactId>alfresco-repository</artifactId>
+            <exclusions>
+				<exclusion>
+	           		<groupId>xml-apis</groupId>
+  					<artifactId>xmlParserAPIs</artifactId>
+	            </exclusion>
+			</exclusions>
+        </dependency>
+		<!-- ========================= -->
+		<!-- cryptography and security -->
+		<!-- ========================= -->
+		<!--  		
+		<dependency>
+			<groupId>javax.security</groupId>
+			<artifactId>jacc</artifactId>
+			<version>1.1</version>
+		</dependency>
+		-->
+		<dependency>
+		    <groupId>xml-security</groupId>
+		    <artifactId>xmlsec</artifactId>
+		    <version>1.3.0</version>
+		</dependency>	
+		<dependency>
+			<groupId>com.google.code.jscep</groupId>
+			<artifactId>jscep</artifactId>
+			<version>2.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcpkix-jdk15on</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.santuario</groupId>
+		    <artifactId>xmlsec</artifactId>
+		    <version>2.1.1</version>
+		</dependency>		
+		<!--  
+		<dependency>
+			<groupId>org.apache.santuario</groupId>
+			<artifactId>xmlsec</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		-->
+		<!--  
+		<dependency>
+			<groupId>iaik</groupId>
+			<artifactId>iaik-pkcs11-wrapper</artifactId>
+			<version>${iaik-pkcs11-wrapper.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>iaik</groupId>
+			<artifactId>iaik_jce</artifactId>
+			<version>${iaik-pkcs11-wrapper.version}</version>
+		</dependency>
+		-->
+		<dependency>
+		    <groupId>org.xipki.iaik</groupId>
+		    <artifactId>sunpkcs11-wrapper</artifactId>
+		    <version>1.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+			<version>${org.bouncycastle.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcmail-jdk16</artifactId>
+			<version>${org.bouncycastle.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bctsp-jdk16</artifactId>
+			<version>${org.bouncycastle.version}</version>
+		</dependency>
+		 
+		<dependency>
+		    <groupId>com.googlecode.xades4j</groupId>
+		    <artifactId>xades4j</artifactId>
+		    <version>1.5.1</version>		    
+		</dependency>
+		
+		<dependency>
+	        <groupId>com.github.librepdf</groupId>
+	        <artifactId>openpdf</artifactId>
+	        <version>1.0.5</version>
+	        <exclusions>
+	        	<exclusion>
+	        		<groupId>org.bouncycastle</groupId>
+	        		<artifactId>*</artifactId>
+	        	</exclusion>	        	
+	        </exclusions>
+		</dependency>
+		<!-- ========== -->
+		<!-- webservice -->
+		<!-- ========== -->
+		<!-- 
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-tools</artifactId>
+			<version>${jaxws.version}</version>			
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>${jaxws.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>policy</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>${jaxb-impl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.security</groupId>
+			<artifactId>wss4j</artifactId>
+			<version>1.6.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xalan</groupId>
+					<artifactId>xalan</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		-->
+		<!-- =============== -->
+		<!-- apache-commons -->
+		<!-- =============== -->
+		<dependency>
+		    <groupId>com.google.inject</groupId>
+		    <artifactId>guice</artifactId>
+		    <version>4.2.0</version>
+		</dependency>
+		<!--  
+		<dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+            <version>2.0</version>
+        </dependency>
+        -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.4.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-digester</groupId>
+			<artifactId>commons-digester</artifactId>
+			<version>1.6</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>2.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- utilities -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.9</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+		<!-- FIXME can we use simply the alfresco json libs?? -->
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId>
+			<version>2.4</version>
+			<classifier>jdk15</classifier>
+		</dependency>
+		<!-- ==================== -->
+		<!-- TESTING -->
+		<!-- ==================== -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>compile</scope>
+		</dependency>
+		 <!-- Bring in Alfresco RAD so we get access to AlfrescoTestRunner classes -->
+        <dependency>
+            <groupId>org.alfresco.maven</groupId>
+            <artifactId>alfresco-rad</artifactId>
+            <version>${alfresco.sdk.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Bring in Spring Context so we can use ApplicationContext, ApplicationContextAware etc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>3.2.17.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Integration tests need httpcomponents to execute tests -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+            <scope>test</scope>
+        </dependency>       
+		
+	   <!-- ========================== -->
+	   <!-- Logging with log4j -->  
+	   <!-- ========================== -->    
+	   <dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>2.10.0</version>
+	   </dependency>       
+	   <dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-log4j12</artifactId>
+		    <version>${org.slf4j.version}</version>
+	   </dependency>
+	   <dependency>
+	         <groupId>org.slf4j</groupId>
+	         <artifactId>jcl-over-slf4j</artifactId>
+	         <version>${org.slf4j.version}</version>
+	   </dependency>
+	   <dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>jul-to-slf4j</artifactId>
+		    <version>${org.slf4j.version}</version>
+		</dependency>        
+        
+		<!-- jcl - java class loader -->
+		<dependency>
+			<groupId>org.xeustechnologies</groupId>
+			<artifactId>jcl-core</artifactId>
+			<version>2.5</version>
+		</dependency>
+    </dependencies>
+    
+    
+    <build>
+	    <pluginManagement>
+	    	<plugins>
+	    	   <plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+				    <execution>
+				        <id>build-amp-file</id>
+				        <phase>package</phase>
+				        <goals>
+				            <goal>single</goal>
+				        </goals>
+				        <configuration>
+				            <appendAssemblyId>false</appendAssemblyId>
+				            <descriptor>src/main/assembly/amp.xml</descriptor>
+				        </configuration>
+				    </execution>
+				</executions>
+				<configuration>
+				    <appendAssemblyId>false</appendAssemblyId>
+				    <descriptor>src/main/assembly/amp.xml</descriptor>
+				</configuration>
+				<dependencies>
+				    <dependency>
+				        <groupId>org.alfresco.maven.plugin</groupId>
+				        <artifactId>alfresco-maven-plugin</artifactId>
+				        <version>${alfresco.sdk.version}</version>
+				    </dependency>
+				</dependencies>
+			   </plugin>
+	    	
+	    	   <plugin>
+                <groupId>org.alfresco.maven.plugin</groupId>
+                <artifactId>alfresco-maven-plugin</artifactId>
+                <version>${alfresco.sdk.version}</version>
+                <executions>
+                    <execution>
+                        <id>start-alfresco</id>
+                        <goals>
+                            <goal>it</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- We need the flat file H2 database to run the Repo -->
+                    <enableH2>true</enableH2>
+                    <!-- This is a platform extension JAR, so we need the platform webapp (alfresco.war) -->
+                    <enablePlatform>true</enablePlatform>
+                    <!-- Enable Solr so we can use search, our Repo extension probably need search -->
+                    <enableSolr>true</enableSolr>
+                    <!-- We don't need the share.war if we don't have any UI extensions -->
+                    <enableShare>false</enableShare>
+                    <!-- Enable the REST API Explorer -->
+                    <enableApiExplorer>true</enableApiExplorer>
+
+                    <!--
+                       JARs and AMPs that should be overlayed/applied to the Platform/Repository WAR
+                       (i.e. alfresco.war)
+                       -->
+                    <platformModules>
+                        <!-- This AMP is needed if we are going to access the platform webapp from a Share webapp -->
+                        <!-- Share Services will be ignored if you are on Platform earlier than 5.1 -->
+                        <moduleDependency>
+                            <groupId>${alfresco.groupId}</groupId>
+                            <artifactId>alfresco-share-services</artifactId>
+                            <version>${alfresco.share.version}</version>
+                            <type>amp</type>
+                        </moduleDependency>
+
+                        <!-- Bring in this JAR project, need to be included here, otherwise resources from META-INF
+                             will not be loaded, such as the test.html page
+                        -->
+                        <moduleDependency>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
+                        </moduleDependency>
+                    </platformModules>
+                </configuration>
+            </plugin>
+			  <plugin>
+			   <groupId>org.apache.maven.plugins</groupId>
+			   <artifactId>maven-release-plugin</artifactId>
+			   <version>2.5.3</version>
+			   <configuration>
+			    <goals>deploy</goals>
+			    <tagNameFormat>Alfresco52/@{project.artifactId}/@{project.version}/@{project.artifactId}</tagNameFormat>
+			   </configuration>
+			  </plugin>
+			  <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-resources-plugin</artifactId>
+	                <version>3.0.1</version>
+	                <configuration>
+	                    <encoding>UTF-8</encoding>
+	                    <nonFilteredFileExtensions>
+	                        <nonFilteredFileExtension>ftl</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>acp</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>doc</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>docx</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>xls</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>xlsx</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>ppt</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>pptx</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>bin</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>lic</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>swf</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>zip</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>msg</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>css</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>ico</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>psd</nonFilteredFileExtension>
+	                        <nonFilteredFileExtension>js</nonFilteredFileExtension>
+	                    </nonFilteredFileExtensions>
+	                </configuration>
+	            </plugin>
+	    	</plugins>
+	   </pluginManagement>
+	   
+	   	<!-- Overrinding Resources of parent pom -->
+	   	<!--
+		This is done by the maven-resources-plugin and configured in <build> / <resources>. 
+		Each <resource> definition in there has a <filtered>true|false</filtered> option that 
+		controls whether maven should replace properties like ${project.artifactId} when copying 
+		the resources over or not.
+		-->
+		<resources>
+		    <!-- Filter the resource files in this project and do property substitutions -->  
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+			<!-- Exclusion of files self-generated by Eclipse and Exclusion files that use markers similar to those used by maven  -->						 
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>${project.build.directory}</targetPath>
+				<filtering>true</filtering>
+				<excludes>					
+					<exclude>**/*.jsfdia</exclude>
+					<exclude>**/*.ftl</exclude>
+					<exclude>**/*.jasper</exclude>
+					<exclude>**/*.ks</exclude>
+					<exclude>**/*.png</exclude>
+					<exclude>**/*.jpg</exclude>
+					<exclude>**/*.jpeg</exclude>
+					<exclude>**/*.gif</exclude>
+					<exclude>**/*.bmp</exclude>				
+				</excludes>
+			</resource>		
+			<!-- Inclusion of resources that use markers similar to those used by maven putting the filtering to false, so the tags are not replaced -->			 		
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>${project.build.directory}</targetPath>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.ftl</include>
+					<include>**/*.jasper</include>
+					<include>**/*.ks</include>
+					<include>**/*.png</include>
+					<include>**/*.jpg</include>
+					<include>**/*.jpeg</include>
+					<include>**/*.gif</include>
+					<include>**/*.bmp</include>
+				</includes>
+			</resource>
+			
+		</resources>
+   </build>
+    
+    
+  
+</project>
+
