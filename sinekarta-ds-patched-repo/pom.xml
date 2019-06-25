@@ -45,16 +45,56 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- The main Alfresco Repo dependency for compiling Java code in src/main/java -->
+      	<!-- ===================== -->
+    	<!-- ALFRESCO DEPENDENCIES -->
+    	<!-- ===================== -->
+		<dependency>
+			<groupId>${alfresco.groupId}</groupId>
+			<artifactId>alfresco-repository</artifactId>
+			<scope>provided</scope>
+		</dependency>
         <dependency>
-            <groupId>${alfresco.groupId}</groupId>
-            <artifactId>alfresco-repository</artifactId>
-            <exclusions>
-				<exclusion>
-	           		<groupId>xml-apis</groupId>
-  					<artifactId>xmlParserAPIs</artifactId>
-	            </exclusion>
-			</exclusions>
+		    <groupId>org.alfresco</groupId>
+		    <artifactId>alfresco-remote-api</artifactId>
+		    <scope>provided</scope>	    	 
+		</dependency>		
+		<dependency>
+		    <groupId>org.alfresco.surf</groupId>
+		    <artifactId>spring-webscripts</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.alfresco.surf</groupId>
+		    <artifactId>spring-webscripts-api</artifactId>		    
+		    <scope>provided</scope>
+		</dependency>	
+		<dependency>
+			<groupId>${alfresco.groupId}</groupId>
+			<artifactId>alfresco-data-model</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.myfaces.core</groupId>
+			<artifactId>myfaces-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+         <!-- Bring in Spring Context so we can use ApplicationContext, ApplicationContextAware etc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>   
+            <scope>provided</scope>        
+        </dependency>
+        <!-- Bring in Alfresco RAD so we get access to AlfrescoTestRunner classes -->
+        <dependency>
+            <groupId>org.alfresco.maven</groupId>
+            <artifactId>alfresco-rad</artifactId>
+            <version>${alfresco.sdk.version}</version>
+            <scope>provided</scope>
         </dependency>
 		<!-- ========================= -->
 		<!-- cryptography and security -->
