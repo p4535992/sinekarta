@@ -47,13 +47,23 @@
             <version>${alfresco.share.version}</version>
             <classifier>classes</classifier>
             <scope>provided</scope>
-        </dependency>	
+        </dependency>
+
+		<dependency>
+			<groupId>org.alfresco.surf</groupId>
+			<artifactId>spring-surf-api</artifactId>
+			<version>${alfresco.surf.version}</version>
+			<scope>provided</scope>
+		</dependency>	
+		
+		<!-- COMMON JAR ALFRESCO REPOSITORY -->
         
         <dependency>
           <groupId>it.abd.alfresco.sign</groupId>
 		  <artifactId>sinekarta-ds-patched-repo</artifactId>
 		  <version>0.0.2-SNAPSHOT</version>
         </dependency>
+        
     </dependencies>
     
    <build>

@@ -96,6 +96,16 @@
             <version>${alfresco.sdk.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- ============== -->
+        <!-- TODO to remove -->
+        <!-- ============== -->
+        <dependency>
+		    <groupId>org.alfresco</groupId>
+		    <artifactId>alfresco-web-client</artifactId>
+		    <version>4.2.f</version>
+		</dependency>
+		
 		<!-- ========================= -->
 		<!-- cryptography and security -->
 		<!-- ========================= -->

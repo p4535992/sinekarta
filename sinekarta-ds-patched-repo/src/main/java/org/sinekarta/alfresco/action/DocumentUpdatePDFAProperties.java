@@ -209,7 +209,7 @@ class DocumentUpdatePropertiesWorker implements RunAsWork<Boolean> {
 			} else {
 				infoDict.put("Keywords", "[SineKarta : "+description+"]");
 			}
-			stamper.setMoreInfo(infoDict);
+			stamper.setMoreInfo((HashMap)infoDict);
 			stamper.close();
 			reader.close();
 		} catch (Exception e) {

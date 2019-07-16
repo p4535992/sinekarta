@@ -16,10 +16,19 @@
  */
 package org.sinekarta.alfresco.web.action.evaluator;
 
+import java.util.List;
+
+import org.alfresco.repo.action.evaluator.ActionConditionEvaluatorAbstractBase;
+import org.alfresco.service.ServiceRegistry;
+import org.alfresco.service.cmr.action.ActionCondition;
+import org.alfresco.service.cmr.action.ParameterDefinition;
+import org.alfresco.service.cmr.dictionary.DictionaryService;
+import org.alfresco.service.cmr.repository.NodeRef;
+import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.security.AccessStatus;
 import org.alfresco.service.cmr.security.PermissionService;
-import org.alfresco.web.action.evaluator.BaseActionEvaluator;
-import org.alfresco.web.bean.repository.Node;
+//import org.alfresco.web.action.evaluator.BaseActionEvaluator;
+//import org.alfresco.web.bean.repository.Node;
 import org.apache.log4j.Logger;
 import org.sinekarta.alfresco.model.SinekartaModel;
 import org.sinekarta.alfresco.web.backing.SinekartaUtility;
@@ -30,7 +39,7 @@ import org.sinekarta.alfresco.web.backing.SinekartaUtility;
  * @author andrea.tessaro
  *
  */
-public class SinekartaAEMarkPermission extends BaseActionEvaluator {
+public class SinekartaAEMarkPermission extends ActionConditionEvaluatorAbstractBase{//extends BaseActionEvaluator {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,15 +47,19 @@ public class SinekartaAEMarkPermission extends BaseActionEvaluator {
 	private static Logger tracer = Logger.getLogger(SinekartaAEMarkPermission.class);
 
 	@Override
-	public boolean evaluate(Node node) {
+	//public boolean evaluate(Node node) {
+    public boolean evaluate(ActionCondition actionCondition, NodeRef actionedUponNodeRef) {
 		try {
+			SinekartaUtility su = SinekartaUtility.getCurrentInstance();
+			NodeService nodeService = su.getNodeService();
 			// passano le folder archivio : 
-			if (node.getType().equals(org.sinekarta.alfresco.model.SinekartaModel.TYPE_QNAME_ARCHIVE)) {
-				// in questo caso si puo' visualizzare l'icona AE
-				SinekartaUtility su = SinekartaUtility.getCurrentInstance();
+			//if (node.getType().equals(org.sinekarta.alfresco.model.SinekartaModel.TYPE_QNAME_ARCHIVE)) {
+			if (nodeService.getType(actionedUponNodeRef).equals(org.sinekarta.alfresco.model.SinekartaModel.TYPE_QNAME_ARCHIVE)) {
+				// in questo caso si puo' visualizzare l'icona AE				
 				PermissionService permissionService = su.getPermissionService();
 				// then check permission of the given node
-				if (permissionService.hasPermission(node.getNodeRef(), SinekartaModel.PERMISSION_GROUP_SINEKARTA_RCS).compareTo(AccessStatus.ALLOWED)==0) {
+				//if (permissionService.hasPermission(node.getNodeRef(), SinekartaModel.PERMISSION_GROUP_SINEKARTA_RCS).compareTo(AccessStatus.ALLOWED)==0) {
+				if (permissionService.hasPermission(actionedUponNodeRef, SinekartaModel.PERMISSION_GROUP_SINEKARTA_RCS).compareTo(AccessStatus.ALLOWED)==0) {
 					return true;
 				} else {
 					return false;
@@ -58,6 +71,16 @@ public class SinekartaAEMarkPermission extends BaseActionEvaluator {
 			tracer.warn("Unable calculate SinekartaAEMarkPermission, have you added faces-config-sinekarta.xml in web.xml?",t);
 			return false;
 		}
+	}
+
+	@Override
+	protected boolean evaluateImpl(ActionCondition actionCondition, NodeRef actionedUponNodeRef) {
+		return this.evaluate(actionCondition, actionedUponNodeRef);
+	}
+
+	@Override
+	protected void addParameterDefinitions(List<ParameterDefinition> paramList) {
+
 	}
 
 }

@@ -136,8 +136,13 @@ public class PDFTools {
 			signatureApparence.setExternalDigest(new byte[128], new byte[32], "RSA");
 			signatureApparence.setProvider(Constants.SIGN_PROVIDER_SINEKARTA_OPENSIGNPDF);
 			signatureApparence.setSignDate(_getSignDate(doc));
-			signatureApparence.getStamper().setModDate(_getModDate(doc));
-			signatureApparence.getStamper().setFileID(_getFileID(doc));
+			//signatureApparence.getStamper().setModDate(_getModDate(doc));
+			//signatureApparence.getStamper().setFileID(_getFileID(doc));
+			
+			HashMap mapMoreInfo = new HashMap();
+			mapMoreInfo.put("modDate", _getModDate(doc));
+			mapMoreInfo.put("fileID", _getFileID(doc));
+			signatureApparence.getStamper().setMoreInfo(mapMoreInfo);
 
 			// questo e' il certificato su cui lavorare
 			X509Certificate[] certList = new X509Certificate[1];
@@ -353,9 +358,11 @@ public class PDFTools {
 
 			// salvo i dati di firma
 			_setSignedAttributes(doc, signedAttributes);
-			_setFileID(doc, (PdfArray) sap.getStamper().getFileID());
+			//_setFileID(doc, (PdfArray) sap.getStamper().getFileID());
+			_setFileID(doc, (PdfArray) sap.getStamper().getMoreInfo().get("fileID"));
 			doc.fingerPrintFromByteArray(fingerPrint);
-			_setModDate(doc, sap.getStamper().getModDate());
+			//_setModDate(doc, sap.getStamper().getModDate());
+			_setModDate(doc, (PdfDate) sap.getStamper().getMoreInfo().get("modDate"));
 			_setSignDate(doc, now);
 
 			// this should be already done, but ...

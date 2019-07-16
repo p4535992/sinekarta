@@ -16,10 +16,19 @@
  */
 package org.sinekarta.alfresco.web.action.evaluator;
 
-import org.alfresco.web.action.evaluator.BaseActionEvaluator;
-import org.alfresco.web.bean.repository.Node;
+import java.util.List;
+
+import org.alfresco.repo.action.evaluator.ActionConditionEvaluatorAbstractBase;
+import org.alfresco.service.ServiceRegistry;
+import org.alfresco.service.cmr.action.ActionCondition;
+import org.alfresco.service.cmr.action.ParameterDefinition;
+import org.alfresco.service.cmr.repository.NodeRef;
+import org.alfresco.service.cmr.repository.NodeService;
+//import org.alfresco.web.action.evaluator.BaseActionEvaluator;
+//import org.alfresco.web.bean.repository.Node;
 import org.apache.log4j.Logger;
 import org.sinekarta.alfresco.model.SinekartaModel;
+import org.sinekarta.alfresco.web.backing.SinekartaUtility;
 
 /**
  * verifying document or folder that can have the configuration action enabled
@@ -27,7 +36,7 @@ import org.sinekarta.alfresco.model.SinekartaModel;
  * @author andrea.tessaro
  *
  */
-public class SinekartaSearchPermission extends BaseActionEvaluator {
+public class SinekartaSearchPermission extends ActionConditionEvaluatorAbstractBase{// extends BaseActionEvaluator {
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,10 +44,14 @@ public class SinekartaSearchPermission extends BaseActionEvaluator {
 	private static Logger tracer = Logger.getLogger(SinekartaSearchPermission.class);
 
 	@Override
-	public boolean evaluate(Node node) {
+	//public boolean evaluate(Node node) {
+	public boolean evaluate(ActionCondition actionCondition, NodeRef actionedUponNodeRef) {
 		try {
+			SinekartaUtility su = SinekartaUtility.getCurrentInstance();
+			NodeService nodeService = su.getNodeService();
 			// is the given node a sinekarta archive?
-			if (node.getType().equals(SinekartaModel.TYPE_QNAME_ARCHIVE)) {
+			//if (node.getType().equals(SinekartaModel.TYPE_QNAME_ARCHIVE)) {
+			if (nodeService.getType(actionedUponNodeRef).equals(SinekartaModel.TYPE_QNAME_ARCHIVE)) {
 				return true;
 			} else { 
 				return false;
@@ -47,6 +60,16 @@ public class SinekartaSearchPermission extends BaseActionEvaluator {
 			tracer.warn("Unable calculate SinekartaConfigurationPermission, have you added faces-config-sinekarta.xml in web.xml?",t);
 			return false;
 		}
+	}
+	
+	@Override
+	protected boolean evaluateImpl(ActionCondition actionCondition, NodeRef actionedUponNodeRef) {
+		return this.evaluate(actionCondition, actionedUponNodeRef);
+	}
+
+	@Override
+	protected void addParameterDefinitions(List<ParameterDefinition> paramList) {
+
 	}
 
 }
